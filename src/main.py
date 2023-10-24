@@ -1,5 +1,10 @@
 from fastapi import FastAPI
-from database import get_session
+import logging.config
+from src.config import Settings
+
+settings = Settings()
+
+logging.config.fileConfig('logging.conf')
 
 app = FastAPI()
 
