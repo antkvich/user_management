@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 import logging.config
-from src.config import Settings
+from src.config import settings
 
-settings = Settings()
 
 logging.config.fileConfig('logging.conf')
+
 
 app = FastAPI()
 
