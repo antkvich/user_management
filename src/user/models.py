@@ -1,7 +1,7 @@
 import datetime
 from typing import Annotated, Optional
 
-from sqlalchemy import DateTime, Enum, Integer, String, ForeignKey, func, Boolean
+from sqlalchemy import DateTime, Enum, Integer, String, ForeignKey, func, Boolean, Index
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -39,6 +39,9 @@ class User(Base):
 
     group = relationship("Group", back_populates="users")
 
+    user_email_idx = Index("user_email_index", email, unique=True)
+    user_username_idx = Index("user_username_index", username, unique=True)
+
 
 class Group(Base):
     __tablename__ = "groups"
@@ -48,3 +51,6 @@ class Group(Base):
     created_at: Mapped[datetime.datetime]
 
     users = relationship("User", back_populates="groups")
+
+    group_name_idx = Index("group_name_idx", name)
+
