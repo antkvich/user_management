@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 import logging.config
 from src.config import settings

@@ -16,11 +16,11 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(Text(30))
-    surname: Mapped[str] = mapped_column(Text(30))
-    username: Mapped[str] = mapped_column(Text(30), unique=True)
-    phone_number: Mapped[str] = mapped_column(Text(14), unique=True)
-    email: Mapped[str] = mapped_column(Text(30), unique=True)
+    name: Mapped[str] = mapped_column(Text)
+    surname: Mapped[str] = mapped_column(Text)
+    username: Mapped[str] = mapped_column(Text, unique=True)
+    phone_number: Mapped[str] = mapped_column(Text, unique=True)
+    email: Mapped[str] = mapped_column(Text, unique=True)
     role: Mapped[RoleEnum]
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey("groups.id"))
     created_at: Mapped[datetime]
@@ -35,7 +35,7 @@ class Group(Base):
     __tablename__ = "groups"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(Text(30))
+    name: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime.datetime]
 
     users = relationship("User", back_populates="groups")
