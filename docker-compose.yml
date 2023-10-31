@@ -24,6 +24,8 @@ services:
 
   db:
 
+    container_name: user_mng_db
+
     env_file:
       - .env
 
@@ -32,8 +34,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
-    expose:
+    ports:
       - ${DB_PORT}
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
 
 
 volumes:
