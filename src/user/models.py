@@ -29,9 +29,9 @@ class User(Base):
     email: Mapped[str] = mapped_column(Text, unique=True)
     role: Mapped[RoleEnum] = mapped_column(default=RoleEnum.USER)
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey("groups.id"))
-    created_at: Mapped[datetime.datetime]
+    created_at: Mapped[timestamp]
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
-    modified_at: Mapped[datetime.datetime]
+    modified_at: Mapped[timestamp]
     image_url: Mapped[Optional[str]] = mapped_column(Text)
 
     group = relationship("Group", back_populates="users")
@@ -42,6 +42,5 @@ class Group(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(Text)
-    created_at: Mapped[datetime.datetime]
-
+    created_at: Mapped[timestamp]
     users = relationship("User", back_populates="groups")
