@@ -20,6 +20,7 @@ class User(BaseModel):
     is_blocked: bool
     modified_at: datetime.datetime
     image_url: Optional[str]
+    hashed_password: str
 
 
 class Group(BaseModel):
