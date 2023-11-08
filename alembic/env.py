@@ -14,9 +14,9 @@ from src.user.models import Base
 # access to the values within the .ini file in use.
 config = context.config
 
-
 section = config.config_ini_section
-config.set_section_option(section, "DATABASE_URL", settings.database_url)
+config.set_section_option(section, "DATABASE_URL",
+                          f"postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}@localhost:5431/user_management")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -28,6 +28,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

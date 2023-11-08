@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     db_port: str
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
     database_url: str
+    jwt_access_token: str
+    jwt_refresh_token: str
 
 
 settings = Settings()
