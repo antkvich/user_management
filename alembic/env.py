@@ -16,7 +16,7 @@ config = context.config
 
 section = config.config_ini_section
 config.set_section_option(section, "DATABASE_URL",
-                          f"postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}@localhost:5431/user_management")
+                          f"postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}@{settings.alembic_ip}:{settings.alembic_port}/user_management")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

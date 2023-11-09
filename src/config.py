@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     database_url: str
     jwt_access_token: str
     jwt_refresh_token: str
+    alembic_ip: str
+    alembic_port: str
+    access_token_expire_minutes: int
+    refresh_token_expire_minutes: int
+    token_algorithm: str
 
 
 settings = Settings()

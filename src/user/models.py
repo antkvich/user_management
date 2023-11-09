@@ -29,9 +29,9 @@ class User(Base):
     email: Mapped[str] = mapped_column(Text, unique=True)
     role: Mapped[RoleEnum] = mapped_column(default=RoleEnum.USER)
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey("groups.id"), nullable=True)
-    created_at: Mapped[timestamp] = mapped_column(server_default=func.UTC_TIMESTAMP())
+    created_at: Mapped[timestamp]
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
-    modified_at: Mapped[timestamp] = mapped_column(server_default=func.UTC_TIMESTAMP())
+    modified_at: Mapped[timestamp]
     image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     hashed_password: Mapped[str] = mapped_column(Text)
 

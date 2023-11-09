@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -25,6 +24,7 @@ async def signup(data: UserInput, session: AsyncSession = Depends(get_session)):
     user = add_user(session, data)
     try:
         await session.commit()
+        await session.flush()
         return user
     except IntegrityError as e:
         await session.rollback()
@@ -35,14 +35,12 @@ async def login(data: UserLogin, session: AsyncSession = Depends(get_session)):
     mail_user = await session.execute(select(User).where(data.email == User.email))
     mail_user = mail_user.scalar()
     if mail_user is None:
-        await session.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect email or password"
         )
     hashed_pass = mail_user.hashed_password
     if not verify_password(data.password, hashed_pass):
-        await session.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect email or password"

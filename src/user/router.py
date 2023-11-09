@@ -31,6 +31,6 @@ async def patch_user(user: UserInput):
     return user
 
 
-@router.get("s")
+@router.get("/all")
 async def get_uses():
     pass

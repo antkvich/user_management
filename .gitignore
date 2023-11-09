@@ -1,3 +1,13 @@
 /user_management_logger.log
 
 /.env
+
+/.idea
+
+/src/__pycache__/
+
+/src/auth/__pycache__/
+
+/src/user/__pycache__/
+/alembic/versions/__pycache__/
+/alembic/__pycache__/

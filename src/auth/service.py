@@ -12,9 +12,9 @@ from src.user.models import User
 
 from uuid import uuid4
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
-ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
+REFRESH_TOKEN_EXPIRE_MINUTES = settings.refresh_token_expire_minutes
+ALGORITHM = settings.token_algorithm
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
