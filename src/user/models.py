@@ -1,11 +1,13 @@
 import datetime
 from enum import Enum
-from typing import Optional, Annotated
+from typing import Annotated, Optional
 
-from sqlalchemy import DateTime, Integer, String, ForeignKey, func, Boolean, Index, Text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, Relationship
+from sqlalchemy import (Boolean, DateTime, ForeignKey, Index, Integer, String,
+                        Text, func)
+from sqlalchemy.orm import (DeclarativeBase, Mapped, Relationship,
+                            mapped_column, relationship)
+
 from src.database import Base
-
 
 timestamp = Annotated[
     datetime.datetime,
@@ -28,7 +30,7 @@ class User(Base):
     phone_number: Mapped[str] = mapped_column(Text, unique=True)
     email: Mapped[str] = mapped_column(Text, unique=True)
     role: Mapped[RoleEnum] = mapped_column(default=RoleEnum.USER)
-    group_id: Mapped[int] = mapped_column(Integer, ForeignKey("groups.id"), nullable=True)
+    group_id: Mapped[int] = mapped_column(Integer, ForeignKey("groups.id"), nullable=True, default="1")
     created_at: Mapped[timestamp]
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
     modified_at: Mapped[timestamp]

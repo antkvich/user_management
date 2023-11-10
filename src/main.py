@@ -1,7 +1,9 @@
-from fastapi import FastAPI
 import logging.config
-from src.user.router import router as user_router
+
+from fastapi import FastAPI
+
 from src.auth.router import router as auth_router
+from src.user.router import router as user_router
 
 logging.config.fileConfig('logging.conf')
 

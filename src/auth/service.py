@@ -1,16 +1,14 @@
-from passlib.context import CryptContext
-from jose import jwt
 from datetime import datetime, timedelta
+from typing import Any, Union
+from uuid import uuid4
 
+from jose import jwt
+from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
-from typing import Any, Union
-
-from src.user.schemas import UserInput
 from src.user.models import User
-
-from uuid import uuid4
+from src.user.schemas import UserInput
 
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 REFRESH_TOKEN_EXPIRE_MINUTES = settings.refresh_token_expire_minutes

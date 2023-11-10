@@ -1,13 +1,16 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.service import add_user, create_access_token, create_refresh_token, verify_password
+from src.auth.service import (add_user, create_access_token,
+                              create_refresh_token, verify_password)
+from src.database import get_session
 from src.user.models import User
 from src.user.schemas import UserInput, UserLogin
-from src.database import get_session
-
-from sqlalchemy import select
 
 router = APIRouter()
 
@@ -31,8 +34,8 @@ async def signup(data: UserInput, session: AsyncSession = Depends(get_session)):
 
 
 @router.post("/login")
-async def login(data: UserLogin, session: AsyncSession = Depends(get_session)):
-    mail_user = await session.execute(select(User).where(data.email == User.email))
+async def login(data: Annotated[OAuth2PasswordRequestForm, Depends()], session: AsyncSession = Depends(get_session)):
+    mail_user = await session.execute(select(User).where(data.username == User.email))
     mail_user = mail_user.scalar()
     if mail_user is None:
         raise HTTPException(

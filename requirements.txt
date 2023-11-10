@@ -10,3 +10,4 @@ passlib~=1.7.4
 python-jose==3.3.0
 pytz~=2023.3.post1
 pydantic[email]
+python-multipart
