@@ -12,7 +12,7 @@ from src.config import settings
 from src.database import get_session
 from src.user import service
 from src.user.models import RoleEnum, User
-from src.user.schemas import UserInput, UserOutput, UserPatch, DeletedOutput
+from src.user.schemas import UserInput, UserOutput, UserPatch
 from src.user.service import delete_user, update_user, get_user_by_id, get_users_query, access_to_get_user
 
 router = APIRouter()
@@ -37,10 +37,10 @@ async def get_user(user_id, user_recipient: Annotated[User, Depends(get_current_
         return user
 
 
-@router.delete("/me", response_model=DeletedOutput)
+@router.delete("/me")
 async def delete_me(current_user: Annotated[User, Depends(get_current_user)], session: AsyncSession = Depends(get_session)):
-    DeletedOutput.deleted = await delete_user(session, current_user)
-    return DeletedOutput
+    deleted = await delete_user(session, current_user)
+    return {"deleted": deleted}
 
 
 @router.patch("/me", response_model=UserOutput)
