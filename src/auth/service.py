@@ -2,8 +2,11 @@ from datetime import datetime, timedelta
 from typing import Any, Union
 from uuid import uuid4
 
+from fastapi import HTTPException, status
 from jose import jwt
 from passlib.context import CryptContext
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
@@ -65,3 +68,20 @@ def add_user(session: AsyncSession, data: UserInput):
     )
     session.add(new_user)
     return new_user
+
+
+async def create_user(data: UserInput, session: AsyncSession):
+    mail_user = await session.execute(select(User).where(data.email == User.email))
+    if mail_user.scalars().all():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with this email already exists"
+        )
+
+    user = add_user(session, data)
+    try:
+        await session.commit()
+        await session.flush()
+        return user
+    except IntegrityError as e:
+        await session.rollback()

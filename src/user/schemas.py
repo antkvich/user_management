@@ -64,3 +64,7 @@ class Group(BaseModel):
     id: int
     name: str
     created_at: datetime.datetime
+
+
+class DeletedOutput(BaseModel):
+    deleted: bool

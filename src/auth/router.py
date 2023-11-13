@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.service import (add_user, create_access_token,
-                              create_refresh_token, verify_password)
+                              create_refresh_token, verify_password, create_user)
 from src.database import get_session
 from src.user.models import User
 from src.user.schemas import UserInput, UserLogin
@@ -17,20 +17,7 @@ router = APIRouter()
 
 @router.post("/signup")
 async def signup(data: UserInput, session: AsyncSession = Depends(get_session)):
-    mail_user = await session.execute(select(User).where(data.email == User.email))
-    if mail_user.scalars().all():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this email already exists"
-        )
-
-    user = add_user(session, data)
-    try:
-        await session.commit()
-        await session.flush()
-        return user
-    except IntegrityError as e:
-        await session.rollback()
+    return await create_user(data, session)
 
 
 @router.post("/login")
