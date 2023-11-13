@@ -89,7 +89,7 @@ async def patch_user(user_id, update_data: UserPatch, token: Annotated[str, Depe
     return user
 
 
-@router.get("/all")
+@router.get("/all/")
 async def get_users(token: Annotated[str, Depends(token_scheme)],
                     page: int = 1,
                     limit: int = 30,
@@ -97,5 +97,7 @@ async def get_users(token: Annotated[str, Depends(token_scheme)],
                     sort_by: str = "id",
                     order_by: str = "asc",
                     session: AsyncSession = Depends(get_session)):
-    users = get_users_query(session, limit, filter_by_name, sort_by, order_by, token)
-    return users
+
+    users = await get_users_query(session, filter_by_name, sort_by, order_by, token)
+
+    return users[(page - 1) * limit: page * limit]

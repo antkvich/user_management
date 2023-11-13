@@ -1,16 +1,17 @@
 from datetime import datetime
 from typing import Any, Union
 
+import sqlalchemy
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, asc, desc
 
 from src.config import settings
 from src.user.schemas import UserInput, UserPatch
-from src.user.models import User
+from src.user.models import User, RoleEnum
 
 token_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -81,39 +82,25 @@ async def get_user_by_id(user_id, session: AsyncSession, token: str = Depends(to
 
 async def get_users_query(
         session: AsyncSession,
-        limit: int,
         filter_by_name: str,
         sort_by_field: str,
         order_by: str,
-        token: str = Depends(token_scheme)
+        token: str = Depends(token_scheme),
 ):
-    match sort_by_field:
-        case "id":
-            sort_by_field = User.id
-        case "name":
-            sort_by_field = User.name
-        case "surname":
-            sort_by_field = User.surname
-        case "username":
-            sort_by_field = User.username
-        case "created_at":
-            sort_by_field = User.created_at
-        case "modified_at":
-            sort_by_field = User.modified_at
-        case "role":
-            sort_by_field = User.role
-        case "group_id":
-            sort_by_field = User.group_id
-        case "is_blocked":
-            sort_by_field = User.is_blocked
-        case _:
-            sort_by_field = User.id
+    user_recipient = await get_current_user(session, token)
 
-    if order_by == "desc":
-        users = await session.execute(select(User).where(filter_by_name == User.name).order_by(sort_by_field.desc()).limit(limit))
+    if user_recipient.role == RoleEnum.ADMIN:
+        if order_by == "desc":
+            users = await session.execute(select(User).where(filter_by_name == User.name).order_by(desc(sort_by_field)))
+        else:
+            users = await session.execute(select(User).where(filter_by_name == User.name).order_by(asc(sort_by_field)))
+    elif user_recipient.role == RoleEnum.MODERATOR:
+        if order_by == "desc":
+            users = await session.execute(select(User).where(filter_by_name == User.name).where(User.group_id == user_recipient.group_id).order_by(desc(sort_by_field)))
+        else:
+            users = await session.execute(select(User).where(filter_by_name == User.name).where(User.group_id == user_recipient.group_id).order_by(asc(sort_by_field)))
     else:
-        users = await session.execute(select(User).where(filter_by_name == User.name).order_by(sort_by_field.asc()).limit(limit))
-
+        raise HTTPException(status_code=403, detail="Access denied")
     users = users.scalars().all()
 
     return users
