@@ -50,7 +50,6 @@ class UserOutput(BaseModel):
     image_url: Optional[str] = None
 
 
-
 class TokenInput(BaseModel):
     token: str
 
